@@ -10,6 +10,7 @@ script = ExtResource("1_2wvcj")
 top_level = true
 
 [node name="Dots" type="Node2D" parent="." unique_id=19821768]
+top_level = true
 
 [node name="Turn" type="Sprite2D" parent="." unique_id=1280062265]
 texture = ExtResource("2_uh3b8")
