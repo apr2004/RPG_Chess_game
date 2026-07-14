@@ -31,6 +31,8 @@ const TURN_WHITE = preload("res://Assets/turn-white.png")
 @onready var pieces = $Pieces
 @onready var dots = $Dots
 @onready var turn = $Turn
+@onready var white_pieces: Control = $"../CanvasLayer/white_pieces"
+@onready var black_pieces: Control = $"../CanvasLayer/black_pieces"
 
 # variables
 # -6 = black king
@@ -55,6 +57,16 @@ var state : bool
 var moves = []
 var selected_piece : Vector2
 
+var promotion_square = null
+
+var white_king = false
+var black_king = false
+var white_rook_left = false 
+var white_rook_right = false 
+var black_rook_left = false 
+var black_rook_right = false 
+
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 	# board with the pieces
@@ -68,9 +80,18 @@ func _ready():
 	board.append([-4,-2,-3,-5,-6,-3,-2,-4])
 	
 	display_board()
+	
+	var white_buttons = get_tree().get_nodes_in_group("white_pieces")
+	var black_buttons = get_tree().get_nodes_in_group("black_pieces")
+	
+	for button in white_buttons:
+		button.pressed.connect(self._on_button_pressed.bind(button))
+	
+	for button in black_buttons:
+		button.pressed.connect(self._on_button_pressed.bind(button))
 
 func _input(event):
-	if event is InputEventMouseButton && event.pressed:
+	if event is InputEventMouseButton && event.pressed && promotion_square == null:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if is_mouse_out(): return
 			var var1 = snapped(get_global_mouse_position().x, 0) / CELL_WIDTH
@@ -80,12 +101,17 @@ func _input(event):
 				selected_piece = Vector2(var2, var1)
 				show_options()
 				state = true
+			elif state: set_move(var2, var1)
 			
 func is_mouse_out():
 	if get_global_mouse_position().x < 0 || get_global_mouse_position().x > 144 || get_global_mouse_position().y > 0 || get_global_mouse_position().y < -144:
 			return true
 
 func display_board():
+	# remove all children that are pieces before instantiating the new ones
+	for child in pieces.get_children():
+		child.queue_free()
+	
 	for i in BOARD_SIZE:
 		for j in BOARD_SIZE:
 			var holder = TEXTURE_HOLDER.instantiate()
@@ -121,7 +147,30 @@ func show_dots():
 		holder.texture = PIECE_MOVE
 		holder.global_position = Vector2(i.y * CELL_WIDTH + (CELL_WIDTH/2), -i.x * CELL_WIDTH - (CELL_WIDTH/2))
 	
+func delete_dots():
+	for child in dots.get_children():
+		child.queue_free()
+	
 func set_move(var2, var1):
+	for i in moves:
+		if i.x == var2 && i.y == var1:
+			# check pawn promotions
+			match board[selected_piece.x][selected_piece.y]:
+				1: 
+					if i.x == 7: promote(i)
+				-1:
+					if i.x == 0: promote(i)
+			# the old piece is gone from its previous position
+			board[var2][var1] = board[selected_piece.x][selected_piece.y]
+			board[selected_piece.x][selected_piece.y] = 0
+			# Switch turns
+			white = !white
+			display_board()
+			break;
+	
+	delete_dots()
+	#we already move a piece
+	state = false
 	
 func get_moves():
 	var _moves = []
@@ -255,3 +304,16 @@ func is_enemy(pos : Vector2):
 	# on black's turn is positive
 	if white && board[pos.x][pos.y] < 0 || !white && board[pos.x][pos.y] > 0: return true
 	return false
+
+func promote(_var: Vector2):
+	promotion_square = _var
+	white_pieces.visible = white
+	black_pieces.visible = !white
+
+func _on_button_pressed(button):
+	var num_char = int(button.name.substr(0,1))
+	board[promotion_square.x][promotion_square.y] = -num_char if white else num_char
+	white_pieces.visible = false
+	black_pieces.visible = false
+	promotion_square = null
+	display_board()
