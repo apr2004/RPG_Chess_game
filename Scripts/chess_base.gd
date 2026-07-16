@@ -55,6 +55,7 @@ var board : Array
 var white : bool = true
 # confirming the move : true, selecting the move : false
 var state : bool
+var is_animating : bool = false
 var moves = []
 var selected_piece : Vector2
 

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bb8wucwpyk74v"]
 
-[ext_resource type="Script" uid="uid://b8gijfuqachcb" path="res://chess.gd" id="1_2wvcj"]
+[ext_resource type="Script" uid="uid://lsm5igxj835h" path="res://Scripts/chess_board.gd" id="1_2wvcj"]
 [ext_resource type="Texture2D" uid="uid://cvtyb4gj5y33x" path="res://Assets/Chess_board.png" id="2_uh3b8"]
 
 [node name="Board" type="Sprite2D" unique_id=1699271323]

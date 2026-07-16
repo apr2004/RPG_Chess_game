@@ -25,6 +25,8 @@ func _ready():
 		button.pressed.connect(self._on_button_pressed.bind(button))
 
 func _input(event):
+	if is_animating: return
+	
 	if event is InputEventMouseButton && event.pressed && promotion_square == null:
 		if event.button_index == MOUSE_BUTTON_LEFT:
 			if is_mouse_out(): return

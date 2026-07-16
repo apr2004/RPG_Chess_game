@@ -4,12 +4,14 @@ class_name ChessRender
 func display_board():
 	# remove all children that are pieces before instantiating the new ones
 	for child in pieces.get_children():
+		pieces.remove_child(child)
 		child.queue_free()
 	
 	for i in BOARD_SIZE:
 		for j in BOARD_SIZE:
 			var holder = TEXTURE_HOLDER.instantiate()
 			pieces.add_child(holder)
+			holder.name = "%d_%d" % [i, j] 
 			holder.global_position = Vector2(j * CELL_WIDTH + (CELL_WIDTH/2), -i * CELL_WIDTH - (CELL_WIDTH/2))
 			
 			match board[i][j]:
@@ -28,7 +30,7 @@ func display_board():
 				1: holder.texture = WHITE_PAWN
 				
 func show_options():
-	moves = get_moves()
+	moves = get_moves(selected_piece)
 	if moves == []:
 		state = false
 		return

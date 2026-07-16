@@ -9,7 +9,6 @@
 [ext_resource type="Texture2D" uid="uid://bmmt31nb526bf" path="res://Assets/black_bishop.png" id="6_jkdf5"]
 [ext_resource type="Texture2D" uid="uid://bhr8c2pb02smt" path="res://Assets/black_rook.png" id="7_wsu2k"]
 [ext_resource type="Texture2D" uid="uid://bs6nmydq4udho" path="res://Assets/black_queen.png" id="8_k12tt"]
-[ext_resource type="Script" uid="uid://lsm5igxj835h" path="res://Scripts/chess_board.gd" id="10_hptm8"]
 
 [sub_resource type="StyleBoxTexture" id="StyleBoxTexture_pxqgl"]
 texture = ExtResource("1_ynf5e")
@@ -165,4 +164,3 @@ theme_override_styles/focus = SubResource("StyleBoxEmpty_rojf5")
 
 [node name="Board" parent="." unique_id=1699271323 instance=ExtResource("1_jjgbg")]
 position = Vector2(72, -72)
-script = ExtResource("10_hptm8")
